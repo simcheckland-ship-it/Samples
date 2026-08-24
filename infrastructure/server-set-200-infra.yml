@@ -23,7 +23,7 @@ server_inventory:
     ram: 2048
     network:
       card: "virtio"         # The recommended virtual network card model
-      bridge: "vmbr0"        # The Proxmox bridge interface to attach to
+      bridge: "vmbr1"        # The Proxmox bridge interface to attach to
       firewall: false         # Enables the Proxmox built-in firewall layer
     ip_address: "10.10.10.201/24"
     gateway: "10.10.10.1"
