@@ -41,7 +41,7 @@ resource "proxmox_virtual_environment_vm" "docker_hosts" {
   vm_id       = each.value.vm_id
 
   clone {
-    vm_id = 9001
+    vm_id = 9002
     full  = false 
   }
 
