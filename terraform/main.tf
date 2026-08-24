@@ -42,6 +42,7 @@ resource "proxmox_virtual_environment_vm" "docker_hosts" {
 
   clone {
     vm_id = 9001
+    full  = false 
   }
 
   cpu { cores = each.value.cores }
