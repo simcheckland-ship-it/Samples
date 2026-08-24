@@ -62,15 +62,9 @@ resource "proxmox_virtual_environment_vm" "docker_hosts" {
     }
 
     # PERMANENTLY ROUTES ALL SYSTEM UPGRADE TRAFFIC THROUGH YOUR CACHING RUNNER
-    user_data = <<EOF
-#cloud-config
-write_files:
-  - path: /etc/apt/apt.conf.d/01proxy
-    permissions: '0644'
-    content: |
-      Acquire::http::Proxy "http://192.168.0.212:3142";
-      Acquire::https::Proxy "http://192.168.0.212:3142";
-EOF
+    apt {
+      proxy = "http://192.168.0.212:3142"
+    }
 
     ip_config {
       ipv4 {
