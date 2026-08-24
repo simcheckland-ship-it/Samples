@@ -63,6 +63,6 @@ jobs:
           TF_VAR_proxmox_token: ${{ secrets.PROXMOX_TOKEN }}
           TF_VAR_server_passwords: |
             {
-              "VM200" = "${{ secrets.VM0_PASS }}",
-              "VM201" = "${{ secrets.VM1_PASS }}",              
+              "VM200" = "${{ secrets.VM200_PASS  }}",
+              "VM201" = "${{ secrets.VM201_PASS  }}",              
             }
