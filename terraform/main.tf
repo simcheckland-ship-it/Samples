@@ -39,6 +39,7 @@ resource "proxmox_virtual_environment_vm" "docker_hosts" {
 
   node_name   = "pve"
   vm_id       = each.value.vm_id
+  stop_on_destroy = true  
 
   clone {
     vm_id = 9002
