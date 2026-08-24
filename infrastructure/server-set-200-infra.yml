@@ -9,9 +9,10 @@ server_inventory:
       firewall: false         # Enables the Proxmox built-in firewall layer
     ip_address: "192.168.0.210/24"
     gateway: "192.168.0.1"
-    servers: 
-      - "1.1.1.1"          # Primary DNS (Cloudflare)
-      - "8.8.8.8"          # Secondary DNS (Google)
+    dns:
+      servers: 
+        - "1.1.1.1"          # Primary DNS (Cloudflare)
+        - "8.8.8.8"          # Secondary DNS (Google)
     ssh_keys:
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGIKOXhR4eQgQgUqcRkY1g6xyjQbnM7++K/5PgOluZPj developer@DESKTOP-IUTPP9P My key"
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFJy7OtQGWITgeusCKSkfu5NphVASNxc+g3HMVGRtxu7 root@Runner runner to vm"
@@ -27,9 +28,10 @@ server_inventory:
       firewall: false         # Enables the Proxmox built-in firewall layer
     ip_address: "10.10.10.201/24"
     gateway: "10.10.10.1"
-    servers: 
-      - "1.1.1.1"          # Primary DNS (Cloudflare)
-      - "8.8.8.8"          # Secondary DNS (Google)
+    dns:
+      servers: 
+        - "1.1.1.1"          # Primary DNS (Cloudflare)
+        - "8.8.8.8"          # Secondary DNS (Google)
     ssh_keys:
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGIKOXhR4eQgQgUqcRkY1g6xyjQbnM7++K/5PgOluZPj developer@DESKTOP-IUTPP9P My key"
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFJy7OtQGWITgeusCKSkfu5NphVASNxc+g3HMVGRtxu7 root@Runner runner to vm"
