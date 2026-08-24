@@ -47,7 +47,11 @@ resource "proxmox_virtual_environment_vm" "docker_hosts" {
 
   cpu { cores = each.value.cores }
   memory { dedicated = each.value.ram }
-  network_device { bridge = "vmbr1" }
+
+   network_device {
+    bridge = each.value.network.bridge
+    model  = each.value.network.card
+  }
 
   initialization {
     user_account {
@@ -62,6 +66,11 @@ resource "proxmox_virtual_environment_vm" "docker_hosts" {
         address = each.value.ip_address
         gateway = each.value.gateway
       }
+    }
+
+    dns {
+      servers = each.value.dns.servers
+      domain  = lookup(each.value.dns, "domain", null) # Safe lookup if domain is missing
     }
   }
   
