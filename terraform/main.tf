@@ -61,11 +61,6 @@ resource "proxmox_virtual_environment_vm" "docker_hosts" {
       password = lookup(var.server_passwords, each.key, null)
     }
 
-    # PERMANENTLY ROUTES ALL SYSTEM UPGRADE TRAFFIC THROUGH YOUR CACHING RUNNER
-    apt {
-      proxy = "http://192.168.0.212:3142"
-    }
-
     ip_config {
       ipv4 {
         address = each.value.ip_address
