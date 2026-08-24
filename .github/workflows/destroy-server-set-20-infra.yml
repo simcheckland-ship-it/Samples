@@ -64,6 +64,5 @@ jobs:
           TF_VAR_server_passwords: |
             {
               "VM200" = "${{ secrets.VM0_PASS }}",
-              "VM201" = "${{ secrets.VM1_PASS }}",
-              "VM201" = "${{ secrets.VM2_PASS }}",
+              "VM201" = "${{ secrets.VM1_PASS }}",              
             }
