@@ -66,6 +66,8 @@
             curl,
             gnupg,
             software-properties-common,
+            docker.io,
+            podman-docker,
           ]
         state: present
         update_cache: yes  # Runs the update over IPv4 only with explicit 10s timeouts
