@@ -41,11 +41,3 @@
         mode: "0755"
       become: true
 
-    - name: Mount the NFS directory containing the certificates
-      ansible.posix.mount:
-        src: "192.168.0.208:/mnt/pve/central-certs" # 👈 Replace 192.168.0.X with your actual NFS Server IP
-        path: /mnt/certs
-        fstype: nfs
-        opts: rw,sync,hard,intr
-        state: mounted
-      become: true
