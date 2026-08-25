@@ -36,10 +36,14 @@ resource "proxmox_virtual_environment_vm" "docker_hosts" {
   for_each = local.infra_data.server_inventory
 
   name        = replace(each.key, "_", "-")
-
   node_name   = "pve"
   vm_id       = each.value.vm_id
   stop_on_destroy = true  
+
+  agent {
+    enabled = true
+    timeout = "0s"  # Stops Terraform from freezing while waiting for a guest IP
+  }
 
   clone {
     vm_id = 9002
