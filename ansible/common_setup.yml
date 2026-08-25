@@ -66,8 +66,6 @@
             curl,
             gnupg,
             software-properties-common,
-            docker.io,
-            podman-docker,
           ]
         state: present
         update_cache: yes  # Runs the update over IPv4 only with explicit 10s timeouts
@@ -81,6 +79,42 @@
         DEBIAN_FRONTEND: noninteractive
         DEBCONF_NONINTERACTIVE_SEEN: "true"
         NEEDRESTART_MODE: "a"
+
+    # 🟢 Install docker adnd docker compose
+    - name: Create directory for Docker APT key
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Add Docker official GPG key
+      ansible.builtin.get_url:
+        url: https://docker.com
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'  
+
+    - name: Add Docker repository to APT sources
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://docker.com {{ ansible_facts['distribution_release'] }} stable"
+        state: present
+        filename: docker
+
+    - name: Install Docker Engine and Docker Compose plugin
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker service is running and enabled
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        enabled: yes
     
     - name: Assign deployment user to the docker group
       user:
