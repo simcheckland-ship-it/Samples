@@ -1,6 +1,6 @@
 ---
 - name: "🔒 Proxy Server Specific Configuration"
-  hosts: app-proxy-server # 🎯 ONLY targets your proxy VM node
+  hosts: VM200 # 🎯 ONLY targets your proxy VM node
   become: true
 
   tasks:
