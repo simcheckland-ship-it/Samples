@@ -41,10 +41,6 @@ jobs:
       # ANSIBLE  -  Run scriots listed in site.yml
       - name: Run Ansible Configuration Playbook
         working-directory: ./ansible  
-        env:
-          HOST_0: "VM200"
-          HOST_1: "VM201"
-          HOST_2: "VM202"
         run: |
       
           # Configure Ansible flags globally to silence warnings and force color
@@ -55,13 +51,15 @@ jobs:
           # 4. Run playbook forcing OpenSSH to ignore known_hosts entirely
           ansible-playbook -i inventory.ini site.yml \
             --private-key=~/.ssh/runner-vm \
-            -e "target_hosts=${HOST_0},${HOST_1},${HOST_2}" \
+            -e "target_hosts=docker_hosts" \
             --ssh-common-args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes'
         shell: /usr/bin/bash -e {0}
 
 
-  #call-child:
-#    # Calls another YAML file in the same repository
-#    needs: terraform
-#    uses: ./.github/workflows/vm20-deploy-proxy.yml
-#    secrets: inherit
+  call-child:
+    needs: terraform
+    uses: ./.github/workflows/deploy-proxy.yml
+    with:
+      target_host: "VM200"              # 🎯 Explicitly pass VM200 for the Set 200 pipeline
+      api_target_ip: "10.10.10.200"     # 🎯 Explicitly pass the Set 200 API IP
+    secrets: inherit
