@@ -1,6 +1,6 @@
 ---
 - name: "🔒 Proxy Server Specific Configuration"
-  hosts: VM200 # 🎯 ONLY targets your proxy VM node
+  hosts: "{{ target_hosts }}" # 🎯 ONLY targets your proxy VM node
   become: true
 
   tasks:
