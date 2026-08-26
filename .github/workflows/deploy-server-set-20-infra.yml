@@ -41,6 +41,10 @@ jobs:
       # ANSIBLE  -  Run scriots listed in site.yml
       - name: Run Ansible Configuration Playbook
         working-directory: ./ansible  
+        env:
+          HOST_0: "VM200"
+          HOST_1: "VM201"
+          HOST_2: "VM202"
         run: |
       
           # Configure Ansible flags globally to silence warnings and force color
