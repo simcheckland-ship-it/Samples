@@ -2,11 +2,17 @@
 # 1. Run common base setups across every single machine first
 - name: Run Global Base Configuration
   import_playbook: common_setup.yml
-
+  vars:
+    target_hosts: "docker_hosts"
+    
 # 2. Statically imported. Target scoping is handled inside the child files.
 - name: Trigger Proxy Server Playbook
   import_playbook: proxy_setup.yml
-
+  vars:
+    target_hosts: "VM200,VM210:&docker_hosts"
+    
 # 3. Statically imported. Target scoping is handled inside the child files.
 - name: Trigger API Server Playbook
   import_playbook: api_setup.yml
+  vars:
+    target_hosts: "VM201,VM211:&docker_hosts"
