@@ -13,6 +13,7 @@ jobs:
         working-directory: ./terraform
 
     steps:
+      # TERRAFORM
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -36,7 +37,8 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        
+
+      # ANSIBLE  
       - name: Run Ansible Configuration Playbook
         working-directory: ./ansible  
         run: |
