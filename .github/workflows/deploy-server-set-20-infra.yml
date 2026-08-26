@@ -55,6 +55,7 @@ jobs:
           # 4. Run playbook forcing OpenSSH to ignore known_hosts entirely
           ansible-playbook -i inventory.ini site.yml \
             --private-key=~/.ssh/runner-vm \
+            -e "target_hosts=${HOST_0},${HOST_1},${HOST_2}" \
             --ssh-common-args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes'
         shell: /usr/bin/bash -e {0}
 
