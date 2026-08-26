@@ -38,7 +38,7 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
 
-      # ANSIBLE  
+      # ANSIBLE  -  Run scriots listed in site.yml
       - name: Run Ansible Configuration Playbook
         working-directory: ./ansible  
         run: |
