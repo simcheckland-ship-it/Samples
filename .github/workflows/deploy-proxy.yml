@@ -1,0 +1,25 @@
+# .github/workflows/deploy-proxy.yml
+name: Deploy Proxy Container
+
+on:
+  workflow_call:
+    inputs:
+      target_host:
+        required: true
+        type: string
+        description: "The specific VM hostname to target (e.g., VM200)"
+      api_target_ip:
+        required: true
+        type: string
+        description: "The API backend IP address for internal configuration"
+
+jobs:
+  configure-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show Passed Values
+        run: |
+          echo "Target Host is: ${{ inputs.target_host }}"
+          echo "API IP is: ${{ inputs.api_target_ip }}"
+          
+      # Add your docker container commands here, referencing ${{ inputs.target_host }}
