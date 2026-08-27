@@ -26,4 +26,22 @@ jobs:
           echo "Target Host is: ${{ inputs.target_host }}"
           echo "API IP is: ${{ inputs.api_target_ip }}"
           echo "API User is: ${{ inputs.api_user }}"
-      # Add your docker container commands here, referencing ${{ inputs.target_host }}
+          
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Copy Proxy Config Files to Downstream Proxy
+        run: |
+          # 1. Copies files into /opt/nginx-proxy/ over the private vmbr1 network
+          # Uses your runner's internal access to hit the isolated downstream IP directly
+          scp -i /root/.ssh/runner-to-vm0 -o StrictHostKeyChecking=no proxy/* ${{ inputs.api_user }}@${{ inputs.target_host }}:/opt/nginx-proxy/
+        
+      - name: Start Nginx Proxy Container on Downstream Proxy
+        run: |
+          # 2. Connects to the downstream proxy over the 10.10.10.* bridge, 
+          #    rebuilds its local Docker stack, and applies your rules on port 80
+          ssh -i /root/.ssh/runner-to-vm0 -o StrictHostKeyChecking=no ${{ inputs.api_user }}@${{ inputs.target_host }} "
+            cd /opt/nginx-proxy && 
+            docker compose down && 
+            docker compose up -d --force-recreate
+          "
