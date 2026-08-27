@@ -88,13 +88,34 @@ resource "local_file" "ansible_inventory" {
   filename = "${path.module}/../ansible/inventory.ini"
   
   content = <<EOT
-[docker_hosts]
+[hosts_${var.set_prefix}]
 %{ for server_key, server_data in local.infra_data.server_inventory ~}
 ${replace(server_key, "_", "-")} ansible_host=${split("/", server_data.ip_address)[0]} ansible_user=${server_data.username} ansible_ssh_private_key_file=~/.ssh/runner-vm
 %{ endfor ~}
+
+[proxy_${var.set_prefix}]
+%{ for server_key, server_data in local.infra_data.server_inventory ~}
+%{ if server_data.vm_id == 200 || server_data.vm_id == 210 ~}
+${replace(server_key, "_", "-")}
+%{ endif ~}
+%{ endfor ~}
+
+[api_${var.set_prefix}]
+%{ for server_key, server_data in local.infra_data.server_inventory ~}
+%{ if server_data.vm_id == 201 || server_data.vm_id == 211 ~}
+${replace(server_key, "_", "-")}
+%{ endif ~}
+%{ endfor ~}
+
+[image_server_${var.set_prefix}]
+%{ for server_key, server_data in local.infra_data.server_inventory ~}
+%{ if server_data.vm_id == 202 || server_data.vm_id == 212 ~}
+${replace(server_key, "_", "-")}
+%{ endif ~}
+%{ endfor ~}
 EOT
 
-  depends_on = [proxmox_virtual_environment_vm.docker_hosts]
+  depends_on = [proxmox_virtual_environment_vm.hosts]
 }
 
 
