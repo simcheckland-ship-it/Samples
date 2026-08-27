@@ -7,7 +7,7 @@
     proxy_ip: >-
       {% if 'VM200' in ansible_play_batch  %}
         {{ hostvars['VM200']['ansible_host'] }}
-      {% elif 'VM210' in groups['hosts'] %}
+      {% elif 'VM210' in ansible_play_batch %}
         {{ hostvars['VM210']['ansible_host'] }}
       {% else %}
         127.0.0.1
