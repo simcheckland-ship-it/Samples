@@ -34,13 +34,13 @@ jobs:
         run: |
           # 1. Copies files into /opt/nginx-proxy/ over the private vmbr1 network
           # Uses your runner's internal access to hit the isolated downstream IP directly
-          scp -i /root/.ssh/runner-to-vm0 -o StrictHostKeyChecking=no proxy/* ${{ inputs.api_user }}@${{ inputs.target_host }}:/opt/nginx-proxy/
+          scp -i /root/.ssh/runner-to-vm0 -o StrictHostKeyChecking=no proxy/* ${{ inputs.api_user }}@${{ inputs.api_target_ip }}:/opt/nginx-proxy/
         
       - name: Start Nginx Proxy Container on Downstream Proxy
         run: |
           # 2. Connects to the downstream proxy over the 10.10.10.* bridge, 
           #    rebuilds its local Docker stack, and applies your rules on port 80
-          ssh -i /root/.ssh/runner-to-vm0 -o StrictHostKeyChecking=no ${{ inputs.api_user }}@${{ inputs.target_host }} "
+          ssh -i /root/.ssh/runner-to-vm0 -o StrictHostKeyChecking=no ${{ inputs.api_user }}@${{ inputs.api_target_ip }} "
             cd /opt/nginx-proxy && 
             docker compose down && 
             docker compose up -d --force-recreate
