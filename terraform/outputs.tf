@@ -4,7 +4,7 @@
 output "deployed_vm_ips" {
   description = "Clean IPv4 addresses mapped to each VM name for quick verification"
   value = {
-    for name, vm in proxmox_virtual_environment_vm.docker_hosts : 
+    for name, vm in proxmox_virtual_environment_vm.hosts : 
     name => split("/", vm.initialization[0].ip_config[0].ipv4[0].address)[0]
   }
 }
@@ -15,7 +15,7 @@ output "deployed_vm_ips" {
 output "infrastructure_spec_summary" {
   description = "A clean breakdown of resource allocations across your active nodes"
   value = {
-    for name, vm in proxmox_virtual_environment_vm.docker_hosts : name => {
+    for name, vm in proxmox_virtual_environment_vm.hosts : name => {
       vm_id  = vm.vm_id
       cores  = vm.cpu[0].cores
       ram_mb = vm.memory[0].dedicated
