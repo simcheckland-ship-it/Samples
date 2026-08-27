@@ -1,18 +1,24 @@
 ---
-# 1. Run common base setups across every single machine first
-- name: Run Global Base Configuration
+# Play 1: Run common setup on every server in the active set
+- name: "🛠️ Apply Common Configuration"
   import_playbook: common_setup.yml
   vars:
-    target_hosts: "docker_hosts"
-    
-# 2. Statically imported. Target scoping is handled inside the child files.
-- name: Trigger Proxy Server Playbook
+    target_hosts: "{{ global_group }}"
+
+# Play 2: Run proxy setup only on the active proxy node
+- name: "🔒 Apply Proxy Specific Configuration"
   import_playbook: proxy_setup.yml
   vars:
-    target_hosts: "VM200,VM210:&docker_hosts"
-    
-# 3. Statically imported. Target scoping is handled inside the child files.
-- name: Trigger API Server Playbook
+    target_hosts: "{{ proxy_group }}"
+
+# Play 3: Run API setup only on the active API node
+- name: "⚙️ Apply API Specific Configuration"
   import_playbook: api_setup.yml
   vars:
-    target_hosts: "VM201,VM211:&docker_hosts"
+    target_hosts: "{{ api_group }}"
+
+# Play 4: Run Image Server setup only on the active Image Server node
+- name: "🖼️ Apply Image Server Specific Configuration"
+  import_playbook: image_server_setup.yml
+  vars:
+    target_hosts: "{{ image_group }}"
