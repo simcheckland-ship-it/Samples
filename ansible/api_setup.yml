@@ -5,7 +5,7 @@
   vars:
     # Dynamically extract the IP of whichever proxy host is active in this run
     proxy_ip: >-
-      {% if 'VM200' in groups['hosts'] %}
+      {% if 'VM200' in ansible_play_batch  %}
         {{ hostvars['VM200']['ansible_host'] }}
       {% elif 'VM210' in groups['hosts'] %}
         {{ hostvars['VM210']['ansible_host'] }}
@@ -16,4 +16,4 @@
   tasks:
     - name: Display the resolved proxy IP
       ansible.builtin.debug:
-      msg: "The API is connecting to the proxy at IP: {{ proxy_ip }}"
+        msg: "The API is connecting to the proxy at IP: {{ proxy_ip }}"
