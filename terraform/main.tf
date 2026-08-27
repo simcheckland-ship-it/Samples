@@ -13,6 +13,12 @@ terraform {
   }
 }
 
+# Declare the set_prefix variable so Terraform knows it exists
+variable "set_prefix" {
+  type        = string
+  description = "The prefix identifier for this specific deployment set (e.g., 200 or 210)"
+}
+
 variable "proxmox_endpoint" { type = string }
 variable "proxmox_token"    { type = string }
 variable "server_passwords" { 
