@@ -14,6 +14,6 @@
       {% endif %}
   
   tasks:
-      - name: Display the resolved proxy IP
-        ansible.builtin.debug:
-          msg: "The API is connecting to the proxy at IP: {{ proxy_ip }}"
+    - name: Display the resolved proxy IP
+      ansible.builtin.debug:
+      msg: "The API is connecting to the proxy at IP: {{ proxy_ip }}"
