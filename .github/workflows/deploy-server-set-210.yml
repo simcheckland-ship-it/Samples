@@ -1,0 +1,66 @@
+name: "🟢 Deploy/Update Server Set 210 Infrastructure"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    name: "Run Terraform"
+    runs-on: self-hosted
+
+    defaults:
+      run:
+        working-directory: ./terraform
+
+    steps:
+      # TERRAFORM
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Generate Secure TFVars
+        run: |
+          cat << 'EOF' > secret.auto.tfvars
+          proxmox_endpoint = "${{ secrets.PROXMOX_ENDPOINT }}"
+          proxmox_token    = "${{ secrets.PROXMOX_TOKEN }}"
+          server_passwords = {
+              "VM210" = "${{ secrets.VM210_PASS }}",
+              "VM211" = "${{ secrets.VM211_PASS }}",
+              "VM212" = "${{ secrets.VM212_PASS }}",
+          }
+          EOF
+
+      - name: Terraform Plan
+        run: terraform plan -var="set_prefix=200" -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -var="set_prefix=200" -auto-approve 
+
+      # ANSIBLE  -  Run scriots listed in site.yml
+      - name: Run Ansible Configuration Playbook
+        working-directory: ./ansible  
+        run: |
+      
+          # Configure Ansible flags globally to silence warnings and force color
+          export ANSIBLE_HOST_KEY_CHECKING=False
+          export ANSIBLE_FORCE_COLOR=True
+          export ANSIBLE_PYTHON_INTERPRETER=auto_silent
+      
+          # 4. Run playbook forcing OpenSSH to ignore known_hosts entirely
+          ansible-playbook -i inventory.ini site.yml \
+            --private-key=~/.ssh/runner-vm \
+            -e "global_group=hosts_200 proxy_group=proxy_200 api_group=api_200 image_group=image_server_200 deployment_user=svc " \
+            --ssh-common-args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes'
+        shell: /usr/bin/bash -e {0}
+
+
+  call-child:
+    needs: terraform
+    uses: ./.github/workflows/deploy-proxy.yml
+    with:
+      target_host: "VM200"              # 🎯 Explicitly pass VM200 for the Set 200 pipeline
+      api_target_ip: "10.10.10.200"     # 🎯 Explicitly pass the Set 200 API IP
+      api_user: "svc"                   # 🎯 Explicitly pass the user
+    secrets: inherit
