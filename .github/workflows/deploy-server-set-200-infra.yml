@@ -51,7 +51,7 @@ jobs:
           # 4. Run playbook forcing OpenSSH to ignore known_hosts entirely
           ansible-playbook -i inventory.ini site.yml \
             --private-key=~/.ssh/runner-vm \
-            -e "global_group=hosts_200 proxy_group=proxy_200 api_group=api_200 image_group=image_server_200" \
+            -e "global_group=hosts_200 proxy_group=proxy_200 api_group=api_200 image_group=image_server_200 deployment_user=svc " \
             --ssh-common-args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes'
         shell: /usr/bin/bash -e {0}
 
