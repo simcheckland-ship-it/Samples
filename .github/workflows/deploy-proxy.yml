@@ -19,7 +19,7 @@ on:
         
 jobs:
   configure-docker:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Show Passed Values
         run: |
