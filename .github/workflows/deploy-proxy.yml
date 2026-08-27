@@ -12,7 +12,11 @@ on:
         required: true
         type: string
         description: "The API backend IP address for internal configuration"
-
+      api_user:
+        required: true
+        type: string
+        description: "The API backend user"
+        
 jobs:
   configure-docker:
     runs-on: ubuntu-latest
@@ -21,5 +25,5 @@ jobs:
         run: |
           echo "Target Host is: ${{ inputs.target_host }}"
           echo "API IP is: ${{ inputs.api_target_ip }}"
-          
+          echo "API User is: ${{ inputs.api_user }}"
       # Add your docker container commands here, referencing ${{ inputs.target_host }}
