@@ -2,16 +2,16 @@
   hosts: "{{ target_hosts }}"
   become: true
 
-   vars:
-    # Dynamically extract the IP of whichever proxy host is active in this run
-    proxy_ip: >-
-      {% if 'VM200' in groups['hosts'] %}
-        {{ hostvars['VM200']['ansible_host'] }}
-      {% elif 'VM210' in groups['hosts'] %}
-        {{ hostvars['VM210']['ansible_host'] }}
-      {% else %}
-        127.0.0.1
-      {% endif %}
+ vars:
+  # Dynamically extract the IP of whichever proxy host is active in this run
+  proxy_ip: >-
+    {% if 'VM200' in groups['hosts'] %}
+      {{ hostvars['VM200']['ansible_host'] }}
+    {% elif 'VM210' in groups['hosts'] %}
+      {{ hostvars['VM210']['ansible_host'] }}
+    {% else %}
+      127.0.0.1
+    {% endif %}
 
   tasks:
     - name: Display the resolved proxy IP
