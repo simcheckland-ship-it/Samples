@@ -38,7 +38,7 @@ provider "proxmox" {
 }
 
 #  Deploy your server group using the parsed YAML data map
-resource "proxmox_virtual_environment_vm" "docker_hosts" {
+resource "proxmox_virtual_environment_vm" "hosts" {
   for_each = local.infra_data.server_inventory
 
   name        = replace(each.key, "_", "-")
