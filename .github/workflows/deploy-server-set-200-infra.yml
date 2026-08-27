@@ -62,4 +62,5 @@ jobs:
     with:
       target_host: "VM200"              # 🎯 Explicitly pass VM200 for the Set 200 pipeline
       api_target_ip: "10.10.10.200"     # 🎯 Explicitly pass the Set 200 API IP
+      api_user: "svc"                   # 🎯 Explicitly pass the user
     secrets: inherit
