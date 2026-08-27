@@ -36,7 +36,7 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -var="set_prefix=200" -auto-approve tfplan
 
       # ANSIBLE  -  Run scriots listed in site.yml
       - name: Run Ansible Configuration Playbook
