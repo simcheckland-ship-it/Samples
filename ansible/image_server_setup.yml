@@ -1,0 +1,4 @@
+---
+- name: "⚙️ Image Server Specific Configuration"
+  hosts: "{{ target_hosts }}"
+  become: true
