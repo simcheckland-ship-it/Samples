@@ -18,7 +18,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Terraform Init
-        run: terraform init
+        run: |
+          # Dynamically inject the correct path into the backend during initialization
+          terraform init -backend-config="path=/var/lib/terraform/server-set-${{ env.TF_VAR_set_prefix }}-infra.tfstate"
+        working-directory: ./terraform
+        env:
+          TF_VAR_set_prefix: "210" # Or change to "210" for your other set
 
       - name: Generate Secure TFVars
         run: |
