@@ -1,4 +1,4 @@
-name: "🟢 Deploy/Update Server Set 210 Infrastructure"
+name: " 🟢 Deploy/Update Server Set 210 Infrastructure"
 
 on:
   workflow_dispatch:
