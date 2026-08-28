@@ -1,0 +1,38 @@
+server_inventory:
+  VM210:
+    vm_id: 210
+    cores: 2
+    ram: 2048
+    network:
+      card: "virtio"         # The recommended virtual network card model
+      bridge: "vmbr1"        # The Proxmox bridge interface to attach to
+      firewall: false         # Enables the Proxmox built-in firewall layer
+    ip_address: "10.10.10.210/24"
+    gateway: "10.10.10.1"
+    dns:
+      servers: 
+        - "1.1.1.1"          # Primary DNS (Cloudflare)
+        - "8.8.8.8"          # Secondary DNS (Google)
+    ssh_keys:
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGIKOXhR4eQgQgUqcRkY1g6xyjQbnM7++K/5PgOluZPj developer@DESKTOP-IUTPP9P My key"
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFJy7OtQGWITgeusCKSkfu5NphVASNxc+g3HMVGRtxu7 root@Runner runner to vm"
+    username: "svc"
+
+  VM211:
+    vm_id: 211
+    cores: 2
+    ram: 2048
+    network:
+      card: "virtio"         # The recommended virtual network card model
+      bridge: "vmbr1"        # The Proxmox bridge interface to attach to
+      firewall: false         # Enables the Proxmox built-in firewall layer
+    ip_address: "10.10.10.211/24"
+    gateway: "10.10.10.1"
+    dns:
+      servers: 
+        - "1.1.1.1"          # Primary DNS (Cloudflare)
+        - "8.8.8.8"          # Secondary DNS (Google)
+    ssh_keys:
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGIKOXhR4eQgQgUqcRkY1g6xyjQbnM7++K/5PgOluZPj developer@DESKTOP-IUTPP9P My key"
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFJy7OtQGWITgeusCKSkfu5NphVASNxc+g3HMVGRtxu7 root@Runner runner to vm"
+    username: "svc"
