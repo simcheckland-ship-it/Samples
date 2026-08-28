@@ -56,7 +56,7 @@ jobs:
         shell: /usr/bin/bash -e {0}
 
 
-  call-child:
+  call-child-proxy:
     needs: terraform
     uses: ./.github/workflows/deploy-proxy.yml
     with:
@@ -64,3 +64,13 @@ jobs:
       api_target_ip: "10.10.10.200"     # 🎯 Explicitly pass the Set 200 API IP
       api_user: "svc"                   # 🎯 Explicitly pass the user
     secrets: inherit
+
+  call-child-api:
+    needs: terraform
+    uses: ./.github/workflows/api-server.yml
+    with:
+      target_host: "VM201"              # 🎯 Explicitly pass VM200 for the Set 200 pipeline
+      api_target_ip: "10.10.10.201"     # 🎯 Explicitly pass the Set 200 API IP
+      api_user: "svc"                   # 🎯 Explicitly pass the user
+    secrets: inherit
+    
