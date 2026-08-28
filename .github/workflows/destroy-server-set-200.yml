@@ -1,4 +1,4 @@
-name: "🔴 Destroy Server Set 200"
+name: " 🔴 Destroy Server Set 200"
 
 on:
   workflow_dispatch:
