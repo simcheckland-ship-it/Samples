@@ -8,9 +8,9 @@ terraform {
   }
 
   # anchor state memory safely outside GitHub's workspace
-  backend "local" {
-    path = "/var/lib/terraform/proxmox-infra.tfstate"
-  }
+  #backend "local" {
+  #  path = "/var/lib/terraform/proxmox-infra.tfstate"
+  #}
 }
 
 # Declare the set_prefix variable so Terraform knows it exists
