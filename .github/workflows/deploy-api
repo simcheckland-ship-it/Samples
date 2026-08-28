@@ -1,0 +1,44 @@
+name: Deploy API Server Changes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "api-server/**"
+      - ".github/workflows/vm1-deploy-api.yml"
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5 
+
+      - name: Copy API Deployment and Code to Proxmox
+        run: |
+          ssh -i /root/.ssh/runner-to-vm1 -o StrictHostKeyChecking=no "${{ secrets.VM1_USER }}@${{ secrets.VM1_HOST }}" "rm -rf ~/react-photo-app/api-server"
+          
+          # Added quotes around the target macro to hide the path colon from YAML
+          scp -i /root/.ssh/runner-to-vm1 -o StrictHostKeyChecking=no -r api-server/ "${{ secrets.VM1_USER }}@${{ secrets.VM1_HOST }}":~/react-photo-app/api-server
+
+      - name: Copy Nginx to Proxmox
+        run: |
+          ssh -i /root/.ssh/runner-to-vm1 -o StrictHostKeyChecking=no "${{ secrets.VM1_USER }}@${{ secrets.VM1_HOST }}" "rm -rf ~/react-photo-app/nginx.conf"
+          
+          # Added quotes around the target macro to hide the path colon from YAML
+          scp -i /root/.ssh/runner-to-vm1 -o StrictHostKeyChecking=no -r api-server/nginx.conf "${{ secrets.VM1_USER }}@${{ secrets.VM1_HOST }}":~/react-photo-app/nginx.conf
+
+      - name: Generate Environmental Payload Locally
+        env:
+          API_SECRET: ${{ secrets.MONGODB_KEY }}
+        run: |
+          echo "MONGODB_KEY=$API_SECRET" > local.env
+
+      - name: Copy Environment File to Proxmox
+        run: |
+          scp -i /root/.ssh/runner-to-vm1 -o StrictHostKeyChecking=no local.env "${{ secrets.VM1_USER }}@${{ secrets.VM1_HOST }}":~/react-photo-app/api-server/.env
+
+      - name: Remote Restart via SSH
+        run: 'ssh -i /root/.ssh/runner-to-vm1 -o StrictHostKeyChecking=no "${{ secrets.VM1_USER }}@${{ secrets.VM1_HOST }}" "cd ~/react-photo-app/api-server && docker compose down && docker compose up -d --build"'
