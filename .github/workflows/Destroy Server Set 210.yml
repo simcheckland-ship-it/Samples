@@ -1,0 +1,68 @@
+name: "🔴 Destroy Server Set 210"
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_destroy:
+        description: 'Type "DESTROY" to confirm deletion'
+        required: true
+        type: string
+      target_server:
+        description: "Target specific server? (Leave blank to delete ALL)"
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  destroy-infrastructure:
+    name: "Execute Proxmox VM Teardown"
+    runs-on: self-hosted
+    environment: production
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Safety Gate Check
+        run: |
+          if [ "${{ github.event.inputs.confirm_destroy }}" != "DESTROY" ]; then
+            echo "❌ Error: Confirmation input did not match 'DESTROY'. Aborting."
+            exit 1
+          fi
+
+      #- name: Setup Terraform
+      #  uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: |
+          # Dynamically inject the correct path into the backend during initialization
+          terraform init -backend-config="path=/var/lib/terraform/server-set-${{ env.TF_VAR_set_prefix }}-infra.tfstate"
+        working-directory: ./terraform
+        env:
+          TF_VAR_set_prefix: "210" # Or change to "210" for your other set
+
+      - name: Run Ansible Graceful Teardown
+        run: |
+          export ANSIBLE_HOST_KEY_CHECKING=False
+          if [ -n "${{ github.event.inputs.target_server }}" ]; then
+            ansible-playbook -i inventory.ini cleanup.yml --limit "${{ github.event.inputs.target_server }}" || echo "Skipping Ansible: Host already down."
+          else
+            ansible-playbook -i inventory.ini cleanup.yml || echo "Skipping Ansible: Hosts already down."
+          fi
+        working-directory: ./ansible
+        continue-on-error: true
+
+      - name: Terraform Destroy (Targeted or Full)
+        run: |
+          if [ -n "${{ github.event.inputs.target_server }}" ]; then
+            echo "Targeted destroy initiated for: ${{ github.event.inputs.target_server }}"
+            terraform destroy -target=proxmox_virtual_environment_vm.docker_hosts[\"${{ github.event.inputs.target_server }}\"] -auto-approve
+          else
+            echo "Full environment destroy initiated!"
+            terraform destroy -auto-approve
+          fi
+        working-directory: ./terraform
+        env:
+          TF_VAR_set_prefix: "200"
+          TF_VAR_proxmox_endpoint: ${{ secrets.PROXMOX_ENDPOINT }}
+          TF_VAR_proxmox_token: ${{ secrets.PROXMOX_TOKEN }}
