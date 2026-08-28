@@ -70,12 +70,12 @@ jobs:
       api_user: "svc"                   # 🎯 Explicitly pass the user
     secrets: inherit
 
-  call-child-api:
-    needs: terraform
-    uses: ./.github/workflows/deploy-api.yml
-    with:
-      target_host: "VM201"              # 🎯 Explicitly pass VM200 for the Set 200 pipeline
-      api_target_ip: "10.10.10.201"     # 🎯 Explicitly pass the Set 200 API IP
-      api_user: "svc"                   # 🎯 Explicitly pass the user
-    secrets: inherit
+  #call-child-api:
+  #  needs: terraform
+  #  uses: ./.github/workflows/deploy-api.yml
+  #   with:
+  #    target_host: "VM201"              # 🎯 Explicitly pass VM200 for the Set 200 pipeline
+  #    api_target_ip: "10.10.10.201"     # 🎯 Explicitly pass the Set 200 API IP
+  #    api_user: "svc"                   # 🎯 Explicitly pass the user
+  #  secrets: inherit
     
