@@ -63,6 +63,6 @@ jobs:
           fi
         working-directory: ./terraform
         env:
-          TF_VAR_set_prefix: "200"
+          TF_VAR_set_prefix: "210"
           TF_VAR_proxmox_endpoint: ${{ secrets.PROXMOX_ENDPOINT }}
           TF_VAR_proxmox_token: ${{ secrets.PROXMOX_TOKEN }}
