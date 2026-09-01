@@ -25,7 +25,7 @@ variable "server_passwords" {
 
 # Load the shared YAML configuration file natively
 locals {
-   infra_data = yamldecode(file("${path.module}/../infrastructure/server-set-${var.set_prefix}-infra.yml"))
+   infra_data = yamldecode(file("${path.module}/../1-infrastructure/server-set-${var.set_prefix}-infra.yml"))
 }
 
 provider "proxmox" {
@@ -88,7 +88,7 @@ resource "proxmox_virtual_environment_vm" "hosts" {
 
 # Automatically generate/overwrite your Ansible inventory file
 resource "local_file" "ansible_inventory" {
-  filename = "${path.module}/../ansible/inventory.ini"
+  filename = "${path.module}/../2-system/ansible/inventory.ini"
   
   content = <<EOT
 [hosts_${var.set_prefix}]
