@@ -88,7 +88,7 @@ resource "proxmox_virtual_environment_vm" "hosts" {
 
 # Automatically generate/overwrite your Ansible inventory file
 resource "local_file" "ansible_inventory" {
-  filename = "${path.module}/../2-system/ansible/inventory.ini"
+  filename = "${path.module}/../../2-system/ansible/inventory.ini"
   
   content = <<EOT
 [hosts_${var.set_prefix}]
