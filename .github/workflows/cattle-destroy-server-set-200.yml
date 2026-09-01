@@ -37,7 +37,7 @@ jobs:
         run: |
           # Dynamically inject the correct path into the backend during initialization
           terraform init -backend-config="path=/var/lib/terraform/server-set-${{ env.TF_VAR_set_prefix }}-infra.tfstate"
-        working-directory: ./terraform
+        working-directory: ./1-infrastructure/terraform
         env:
           TF_VAR_set_prefix: "200" # Or change to "210" for your other set
 
@@ -49,7 +49,7 @@ jobs:
           else
             ansible-playbook -i inventory.ini cleanup.yml || echo "Skipping Ansible: Hosts already down."
           fi
-        working-directory: ./ansible
+        working-directory: ./2-system/ansible
         continue-on-error: true
 
       - name: Terraform Destroy (Targeted or Full)
@@ -61,7 +61,7 @@ jobs:
             echo "Full environment destroy initiated!"
             terraform destroy -auto-approve
           fi
-        working-directory: ./terraform
+        working-directory: ./1-infrastructure/terraform
         env:
           TF_VAR_set_prefix: "200"
           TF_VAR_proxmox_endpoint: ${{ secrets.PROXMOX_ENDPOINT }}
