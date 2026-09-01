@@ -34,7 +34,7 @@ jobs:
         run: |
           # 1. Copies files into /opt/nginx-proxy/ over the private vmbr1 network
           # Uses your runner's internal access to hit the isolated downstream IP directly
-          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  proxy/* ${{ inputs.api_user }}@${{ inputs.api_target_ip }}:/opt/nginx-proxy/
+          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  3-software/proxy/* ${{ inputs.api_user }}@${{ inputs.api_target_ip }}:/opt/nginx-proxy/
         
       - name: Start Nginx Proxy Container on Downstream Proxy
         run: |
