@@ -17,7 +17,7 @@
 
     - name: Copy deployment files from root proxy folder
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/../3-software/proxy/{{ item }}"
+        src: "{{ playbook_dir }}/../../3-software/proxy/{{ item }}"
         dest: "/opt/nginx-proxy/{{ item }}"
         owner: "{{ deployment_user }}"
         group: "{{ deployment_user }}"
