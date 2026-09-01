@@ -25,7 +25,7 @@ variable "server_passwords" {
 
 # Load the shared YAML configuration file natively
 locals {
-   infra_data = yamldecode(file("${path.module}/../1-infrastructure/server-set-${var.set_prefix}-infra.yml"))
+   infra_data = yamldecode(file("${path.module}/../../server-set-${var.set_prefix}-infra.yml"))
 }
 
 provider "proxmox" {
