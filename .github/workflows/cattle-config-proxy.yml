@@ -20,6 +20,8 @@ on:
 jobs:
   configure-docker:
     runs-on: self-hosted
+    env:
+      PROXY_PATH: /opt/docker/nginx-proxy
     steps:
       - name: Show Passed Values
         run: |
@@ -28,20 +30,25 @@ jobs:
           echo "API User is: ${{ inputs.user }}"
           
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
+      - name: Create Folders For Config Files
+        run: |
+          ssh -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${{ inputs.user }}@${{ inputs.target_ip }}" 
+          "sudo mkdir -p /opt/docker/nginx-proxy && sudo chown -R ${{ inputs.user }}:${{ inputs.user }} ${{ env.PROXY_PATH }} "
+          
       - name: Copy Proxy Config Files to Downstream Proxy
         run: |
           # 1. Copies files into /opt/nginx-proxy/ over the private vmbr1 network
           # Uses your runner's internal access to hit the isolated downstream IP directly
-          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  3-software/proxy/* ${{ inputs.user }}@${{ inputs.target_ip }}:/opt/nginx-proxy/
+          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  3-software/proxy/* ${{ inputs.user }}@${{ inputs.target_ip }}:${{ env.PROXY_PATH }}/
         
       - name: Start Nginx Proxy Container on Downstream Proxy
         run: |
           # 2. Connects to the downstream proxy over the 10.10.10.* bridge, 
           #    rebuilds its local Docker stack, and applies your rules on port 80
           ssh -i /root/.ssh/runner-vm -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  ${{ inputs.user }}@${{ inputs.target_ip }} "
-            cd /opt/nginx-proxy && 
+            cd ${{ env.PROXY_PATH }} && 
             docker compose down && 
             docker compose up -d --force-recreate
           "
