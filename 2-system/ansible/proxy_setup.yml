@@ -4,29 +4,6 @@
   become: true
 
   tasks:
-    - name: Create Nginx infrastructure directories
-      ansible.builtin.file:
-        path: "{{ item.path }}"
-        state: directory
-        owner: "{{ deployment_user }}"
-        group: "{{ deployment_user }}"
-        mode: "{{ item.mode }}"
-      loop:
-        - { path: "/etc/nginx/ssl", mode: "0700" }
-        - { path: "/opt/nginx-proxy/", mode: "0755" }
-
-    - name: Copy deployment files from root proxy folder
-      ansible.builtin.copy:
-        src: "{{ playbook_dir }}/../../3-software/proxy/{{ item }}"
-        dest: "/opt/nginx-proxy/{{ item }}"
-        owner: "{{ deployment_user }}"
-        group: "{{ deployment_user }}"
-        mode: "0644"
-      loop:
-        - docker-compose.yml
-        - nginx.conf
-      become: true
-
     - name: Install NFS client utilities
       ansible.builtin.apt:
         name: nfs-common
