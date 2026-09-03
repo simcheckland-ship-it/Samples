@@ -131,3 +131,22 @@
         name: "{{ ansible_user }}"
         groups: docker
         append: yes
+
+    - name: Ensure the global base docker directory exists
+      ansible.builtin.file:
+        path: /opt/docker
+        state: directory
+        owner: "{{ deployment_user }}"
+        group: "{{ deployment_user }}"
+        mode: "0755"
+      become: true
+
+    - name: Create Nginx SSL system directory
+      ansible.builtin.file:
+        path: /etc/nginx/ssl
+        state: directory
+        owner: root
+        group: root
+        mode: "0700"
+      become: true
+
