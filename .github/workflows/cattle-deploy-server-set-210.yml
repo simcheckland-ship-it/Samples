@@ -10,7 +10,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./terraform
+        working-directory: ./1-infrastructure/terraform
 
     steps:
       # TERRAFORM
@@ -21,7 +21,7 @@ jobs:
         run: |
           # Dynamically inject the correct path into the backend during initialization
           terraform init -backend-config="path=/var/lib/terraform/server-set-${{ env.TF_VAR_set_prefix }}-infra.tfstate"
-        working-directory: ./terraform
+        working-directory: ./1-infrastructure/terraform
         env:
           TF_VAR_set_prefix: "210" # Or change to "210" for your other set
 
@@ -45,7 +45,7 @@ jobs:
 
       # ANSIBLE  -  Run scriots listed in site.yml
       - name: Run Ansible Configuration Playbook
-        working-directory: ./ansible  
+        working-directory: ./2-system/ansible  
         run: |
       
           # Configure Ansible flags globally to silence warnings and force color
