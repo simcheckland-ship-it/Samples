@@ -8,11 +8,11 @@ on:
         required: true
         type: string
         description: "The specific VM hostname to target (e.g., VM200)"
-      api_target_ip:
+      target_ip:
         required: true
         type: string
         description: "The API backend IP address for internal configuration"
-      api_user:
+      user:
         required: true
         type: string
         description: "The API backend user"
@@ -24,8 +24,8 @@ jobs:
       - name: Show Passed Values
         run: |
           echo "Target Host is: ${{ inputs.target_host }}"
-          echo "API IP is: ${{ inputs.api_target_ip }}"
-          echo "API User is: ${{ inputs.api_user }}"
+          echo "API IP is: ${{ inputs.target_ip }}"
+          echo "API User is: ${{ inputs.user }}"
           
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -34,13 +34,13 @@ jobs:
         run: |
           # 1. Copies files into /opt/nginx-proxy/ over the private vmbr1 network
           # Uses your runner's internal access to hit the isolated downstream IP directly
-          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  3-software/proxy/* ${{ inputs.api_user }}@${{ inputs.api_target_ip }}:/opt/nginx-proxy/
+          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  3-software/proxy/* ${{ inputs.user }}@${{ inputs.target_ip }}:/opt/nginx-proxy/
         
       - name: Start Nginx Proxy Container on Downstream Proxy
         run: |
           # 2. Connects to the downstream proxy over the 10.10.10.* bridge, 
           #    rebuilds its local Docker stack, and applies your rules on port 80
-          ssh -i /root/.ssh/runner-vm -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  ${{ inputs.api_user }}@${{ inputs.api_target_ip }} "
+          ssh -i /root/.ssh/runner-vm -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null  ${{ inputs.user }}@${{ inputs.target_ip }} "
             cd /opt/nginx-proxy && 
             docker compose down && 
             docker compose up -d --force-recreate
