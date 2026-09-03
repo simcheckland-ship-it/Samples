@@ -7,11 +7,11 @@ on:
         required: true
         type: string
         description: "The specific VM hostname to target (e.g., VM200)"
-      api_target_ip:
+      target_ip:
         required: true
         type: string
         description: "The API backend IP address for internal configuration"
-      api_user:
+      user:
         required: true
         type: string
         description: "The API backend user"
@@ -26,17 +26,17 @@ jobs:
 
       - name: Copy API Deployment and Code to Proxmox
         run: |
-          ssh -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${{ inputs.api_user }}@${{ inputs.api_target_ip }}" "rm -rf ~/react-photo-app/api-server"
+          ssh -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${{ inputs.user }}@${{ inputs.target_ip }}" "rm -rf ~/react-photo-app/api-server"
           
           # Added quotes around the target macro to hide the path colon from YAML
-          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r api-server/ "${{ inputs.api_user }}@${{ inputs.api_target_ip }}":~/react-photo-app/api-server
+          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r api-server/ "${{ inputs.user }}@${{ inputs.target_ip }}":~/react-photo-app/api-server
 
       - name: Copy Nginx to Proxmox
         run: |
-          ssh -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${{ inputs.api_user }}@${{ inputs.api_target_ip }}" "rm -rf ~/react-photo-app/nginx.conf"
+          ssh -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${{ inputs.user }}@${{ inputs.target_ip }}" "rm -rf ~/react-photo-app/nginx.conf"
           
           # Added quotes around the target macro to hide the path colon from YAML
-          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r api-server/nginx.conf "${{ inputs.api_user }}@${{ inputs.api_target_ip }}":~/react-photo-app/nginx.conf
+          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r api-server/nginx.conf "${{ inputs.user }}@${{ inputs.target_ip }}":~/react-photo-app/nginx.conf
 
       - name: Generate Environmental Payload Locally
         env:
@@ -46,7 +46,7 @@ jobs:
 
       - name: Copy Environment File to Proxmox
         run: |
-          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null local.env "${{ inputs.api_user }}@${{ inputs.api_target_ip }}":~/react-photo-app/api-server/.env
+          scp -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null local.env "${{ inputs.user }}@${{ inputs.target_ip }}":~/react-photo-app/api-server/.env
 
       - name: Remote Restart via SSH
-        run: 'ssh -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${{ inputs.api_user }}@${{ inputs.api_target_ip }}" "cd ~/react-photo-app/api-server && docker compose down && docker compose up -d --build"'
+        run: 'ssh -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${{ inputs.user }}@${{ inputs.target_ip }}" "cd ~/react-photo-app/api-server && docker compose down && docker compose up -d --build"'
