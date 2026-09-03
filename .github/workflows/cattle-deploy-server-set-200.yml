@@ -15,7 +15,7 @@ jobs:
     steps:
       # TERRAFORM
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Terraform Init
         run: |
