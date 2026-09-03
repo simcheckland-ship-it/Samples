@@ -85,6 +85,6 @@ jobs:
           ./scripts/deploy-service.sh \
             "svc" \
             "10.10.10.201" \
-            "/opt/docker/dotnet-api" \
-            "3-software/dotnet-api"
+            "/opt/docker/api-server" \
+            "3-software/api-server"
     
