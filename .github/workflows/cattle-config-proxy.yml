@@ -34,8 +34,8 @@ jobs:
 
       - name: Create Folders For Config Files
         run: |
-          ssh -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${{ inputs.user }}@${{ inputs.target_ip }}" 
-          "sudo mkdir -p /opt/docker/nginx-proxy && sudo chown -R ${{ inputs.user }}:${{ inputs.user }} ${{ env.PROXY_PATH }} "
+          ssh -i /root/.ssh/runner-vm  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${{ inputs.user }}@${{ inputs.target_ip }}" |
+          "sudo mkdir  ${{ env.PROXY_PATH }} && sudo chown -R ${{ inputs.user }}:${{ inputs.user }} ${{ env.PROXY_PATH }} "
           
       - name: Copy Proxy Config Files to Downstream Proxy
         run: |
