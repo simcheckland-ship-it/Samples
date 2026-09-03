@@ -22,7 +22,7 @@ ssh $SSH_FLAGS "${TARGET_USER}@${TARGET_IP}" "sudo mkdir -p $APP_PATH && sudo ch
 
 # Step 2: Deploy config files via SCP (using /. to copy folder contents safely)
 echo "📦 Syncing configuration files securely..."
-scp $SSH_FLAGS -r "${SOURCE_DIR}/." "${TARGET_USER}@${TARGET_IP}:${APP_PATH}/"
+scp $SSH_FLAGS -r "${SOURCE_DIR}" "${TARGET_USER}@${TARGET_IP}:${APP_PATH}/"
 
 # Step 3: Run the local docker stack
 echo "🐳 Rebuilding Docker configuration stack..."
