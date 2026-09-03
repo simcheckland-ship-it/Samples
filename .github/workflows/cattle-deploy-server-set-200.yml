@@ -61,21 +61,30 @@ jobs:
         shell: /usr/bin/bash -e {0}
 
 
-  call-child-proxy:
+  deploy-applications:
+    name: "Deploy Docker Container Apps"
     needs: terraform
-    uses: ./.github/workflows/cattle-config-proxy.yml
-    with:
-      target_host: "VM200"              # 🎯 Explicitly pass VM201 for the Set 201 pipeline
-      target_ip: "10.10.10.200"     # 🎯 Explicitly pass the Set 201 API IP
-      user: "svc"                   # 🎯 Explicitly pass the user
-    secrets: inherit
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
 
-  call-child-api:
-    needs: terraform
-    uses: ./.github/workflows/cattle-config-api.yml
-    with:
-      target_host: "VM201"              # 🎯 Explicitly pass VM201 for the Set 201 pipeline
-      target_ip: "10.10.10.201"     # 🎯 Explicitly pass the Set 201 API IP
-      user: "svc"                   # 🎯 Explicitly pass the user
-    secrets: inherit
+      - name: Make Script Executable
+        run: chmod +x ./scripts/deploy-service.sh
+
+      - name: Deploy Proxy Config (VM200)
+        run: |
+          ./scripts/deploy-service.sh \
+            "svc" \
+            "10.10.10.200" \
+            "/opt/docker/nginx-proxy" \
+            "3-software/proxy"
+
+      - name: Deploy .NET Web API Config (VM201)
+        run: |
+          ./scripts/deploy-service.sh \
+            "svc" \
+            "10.10.10.201" \
+            "/opt/docker/dotnet-api" \
+            "3-software/dotnet-api"
     
