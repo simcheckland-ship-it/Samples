@@ -1,4 +1,4 @@
-name: " 🔴 Destroy Server Set 210"
+name: " 🔴 DESTROY Server Set 210"
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Safety Gate Check
         run: |
