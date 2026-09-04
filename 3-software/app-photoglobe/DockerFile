@@ -1,43 +1,41 @@
-# Stage 1: Build the React application
+# Step 1: Choose your base image (assuming a Node build environment for React)
 FROM node:20-alpine AS build
-WORKDIR /workspace
+WORKDIR /app
 
-# Copy package configurations and install dependencies
-COPY ./PhotoGlobe/package*.json ./
-
-# Receive the argument from docker-compose.yml
+# Step 2: Define BUILD-TIME arguments (matches your GitHub Action --build-arg flags)
 ARG VITE_BASE_URL_LOCAL
 ARG VITE_BASE_URL_PUBLIC
 ARG VITE_CESIUM_KEY
 ARG VITE_GOOGLE_KEY
 ARG VITE_OS_KEY
 ARG VITE_TT_KEY
-# Expose it to the Node/Vite build process
+ARG VITE_APP_ENV=production
+
+# Step 3: Convert ARGs into actual Environment Variables so Vite can read them during 'npm run build'
 ENV VITE_BASE_URL_LOCAL=$VITE_BASE_URL_LOCAL
 ENV VITE_BASE_URL_PUBLIC=$VITE_BASE_URL_PUBLIC
 ENV VITE_CESIUM_KEY=$VITE_CESIUM_KEY
 ENV VITE_GOOGLE_KEY=$VITE_GOOGLE_KEY
 ENV VITE_OS_KEY=$VITE_OS_KEY
 ENV VITE_TT_KEY=$VITE_TT_KEY
+ENV VITE_APP_ENV=$VITE_APP_ENV
 
-
+# Step 4: Copy package files and install dependencies
+COPY package*.json ./
 RUN npm ci
 
-# Copy the entire frontend source code and compile it
-COPY ./PhotoGlobe/ ./
+# Step 5: Copy your source code and build the React app
+COPY . .
 RUN npm run build
 
-
-
-# Stage 2: Serve the compiled static assets with Nginx
+# Step 6: Production environment
 FROM nginx:alpine
-# Copy the compiled build folder into Nginx's public directory
-COPY --from=build /workspace/dist /usr/share/nginx/html
 
-# FIX 1: Copy your local nginx.conf to apply the /map routing fix
+# 1. Copy your custom server configuration file over the default one
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# FIX 2: Change this from 80 to 3000 to match your app configuration
-EXPOSE 3000
+# 2. Copy the compiled static production assets from the builder stage
+COPY --from=build /app/dist /usr/share/nginx/html
 
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
