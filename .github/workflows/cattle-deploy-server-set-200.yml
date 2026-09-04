@@ -80,19 +80,13 @@ jobs:
             "/opt/docker/nginx-proxy" \
             "3-software/proxy"
 
-      - name: Deploy Nginx API Config (VM201)
+      - name: Deploy API Config (VM201)
         run: |
           ./scripts/deploy-service.sh \
             "svc" \
             "10.10.10.201" \
             "/opt/docker/nginx" \
-            "3-software/api-server/nginx"
+            "3-software/api-server"
             
-      - name: Deploy .NET Web API Config (VM201)
-        run: |
-          ./scripts/deploy-service.sh \
-            "svc" \
-            "10.10.10.201" \
-            "/opt/docker/api" \
-            "3-software/api-server/api"
+
     
