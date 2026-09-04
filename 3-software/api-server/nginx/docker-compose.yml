@@ -7,9 +7,6 @@ services:
     ports:
       - "80:80"
     restart: always
-    # ==========================================
-    # ADD THIS MISSING VOLUMES BLOCK
-    # ==========================================
     volumes:
       # 1. Links your custom nginx.conf file into the container's engine path
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
