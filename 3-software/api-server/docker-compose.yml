@@ -11,7 +11,7 @@ services:
       - webapi # Ensures the API starts before Nginx attempts to route to it
 
   webapi:
-    container_name: photo-webapi
+    container_name: webapi
     build: 
       context: .                        # Look inside the current api/ folder
       dockerfile: Dockerfile 
