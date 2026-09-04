@@ -1,4 +1,15 @@
 services:
+  photo-nginx:
+    image: nginx:latest
+    container_name: nginx-api
+    ports:
+      - "80:80"
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - webapi # Ensures the API starts before Nginx attempts to route to it
+
   webapi:
     container_name: photo-webapi
     build: 
