@@ -72,6 +72,24 @@ jobs:
       - name: Make Script Executable
         run: chmod +x ./scripts/deploy-service.sh
 
+      - name: Create Env Files
+        run: |
+          # 1. Define global/common configurations used by all services
+          GLOBAL_ENV_CONTENT="NODE_ENV=production
+          DOMAIN=yourdomain.com
+          COMPANY_NAME=MyCompany"
+          
+          # 2. Generate Proxy specific .env (VM200)
+          echo "$GLOBAL_ENV_CONTENT" > ./3-software/proxy/.env
+          echo "PROXY_PORT=80" >> ./3-software/proxy/.env
+          echo "SSL_CERT_PATH=/etc/letsencrypt" >> ./3-software/proxy/.env
+          
+          # 3. Generate API specific .env with your GitHub Secret (VM201)
+          echo "$GLOBAL_ENV_CONTENT" > ./3-software/api-server/.env
+          echo "MONGODB_KEY=${{ secrets.MONGODB_KEY }}" >> ./3-software/api-server/.env
+          echo "ASPNETCORE_ENVIRONMENT=Production" >> ./3-software/api-server/.env
+
+
       - name: Deploy Proxy Config (VM200)
         run: |
           ./scripts/deploy-service.sh \
