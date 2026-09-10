@@ -80,14 +80,14 @@ jobs:
           # COMPANY_NAME=MyCompany"
           
           # 2. Generate Proxy specific .env (VM200)
-          echo "$GLOBAL_ENV_CONTENT" > /opt/docker/nginx-proxy/.env
-          echo "PROXY_PORT=80" >> /opt/docker/nginx-proxy/.env
-          echo "SSL_CERT_PATH=/etc/letsencrypt" >> /opt/docker/nginx-proxy/.env
+          echo "$GLOBAL_ENV_CONTENT" > ./3-software/proxy/.env
+          echo "PROXY_PORT=80" >> ./3-software/proxy/.env
+          echo "SSL_CERT_PATH=/etc/letsencrypt" >> ./3-software/proxy/.env
           
           # 3. Generate API specific .env with your GitHub Secret (VM201)
-          echo "$GLOBAL_ENV_CONTENT" > /opt/docker/.env
-          echo "MONGODB_KEY=${{ secrets.MONGODB_KEY }}" >> /opt/docker/.env
-          echo "ASPNETCORE_ENVIRONMENT=Production" >> /opt/docker/.env
+          echo "$GLOBAL_ENV_CONTENT" > ./3-software/api-server/.env
+          echo "MONGODB_KEY=${{ secrets.MONGODB_KEY }}" >> ./3-software/api-server/.env
+          echo "ASPNETCORE_ENVIRONMENT=Production" >> ./3-software/api-server/.env
 
 
       - name: Deploy Proxy Config (VM200)
