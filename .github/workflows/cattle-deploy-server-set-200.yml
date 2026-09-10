@@ -103,7 +103,7 @@ jobs:
           ./scripts/deploy-service.sh \
             "svc" \
             "10.10.10.201" \
-            "/opt/docker/nginx" \
+            "/opt/docker" \
             "3-software/api-server"
             
 
