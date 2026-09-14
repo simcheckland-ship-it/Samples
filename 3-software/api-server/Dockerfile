@@ -36,5 +36,5 @@ RUN dotnet publish "PhotoWepApi.csproj" -c Release -o /app/publish /p:UseAppHost
 # Step 4: Assemble final runtime image
 FROM base AS final
 WORKDIR /app
-RUN --mount=from=publish,source=/app/publish,target=/tmp/publish cp -a /tmp/publish/. ./
+COPY --from=publish /app/publish ./
 ENTRYPOINT ["dotnet", "PhotoWepApi.dll"]
