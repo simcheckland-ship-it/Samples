@@ -27,6 +27,7 @@ scp $SSH_FLAGS -T -r "${SOURCE_DIR}"/* "${TARGET_USER}@${TARGET_IP}:${APP_PATH}/
 # Step 3: Run the local docker stack
 echo "🐳 Rebuilding Docker configuration stack..."
 ssh $SSH_FLAGS "${TARGET_USER}@${TARGET_IP}" "
+  export BUILDKIT_DISABLE_COW_COPY=1 && \
   cd $APP_PATH && \
   if [ -f docker-compose.yml ] || [ -f compose.yml ]; then
     docker compose down && \
