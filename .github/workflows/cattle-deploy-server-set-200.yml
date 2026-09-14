@@ -7,7 +7,9 @@ jobs:
   terraform:
     name: "Run Terraform"
     runs-on: self-hosted
-
+    env:
+      BUILDKIT_DISABLE_COW_COPY: "1"
+      
     defaults:
       run:
         working-directory: ./1-infrastructure/terraform
