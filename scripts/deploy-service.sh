@@ -20,12 +20,13 @@ SSH_FLAGS="-i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/nu
 echo "📁 Preparing remote directory infrastructure..."
 ssh $SSH_FLAGS "${TARGET_USER}@${TARGET_IP}" "sudo mkdir -p $APP_PATH && sudo chown -R ${TARGET_USER}:${TARGET_USER} $APP_PATH"
 
-# Step 2: Deploy config files via SCP (using /. to copy folder contents safely)
+# Step 2: Deploy config files via SCP
 echo "📦 Syncing configuration files securely..."
-scp $SSH_FLAGS -T -r "${SOURCE_DIR}"/* "${TARGET_USER}@${TARGET_IP}:${APP_PATH}/"
+scp $SSH_FLAGS -r "${SOURCE_DIR}/" "${TARGET_USER}@${TARGET_IP}:${APP_PATH}/"
 
 # Step 3: Run the local docker stack
-echo "🐳 Rebuilding Docker configuration stack..." "
+echo "🐳 Rebuilding Docker configuration stack..." 
+ssh $SSH_FLAGS "${TARGET_USER}@${TARGET_IP}" "
   cd $APP_PATH && \
   if [ -f docker-compose.yml ] || [ -f compose.yml ]; then
     docker compose down && \
